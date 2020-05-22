@@ -62,3 +62,4 @@
   glColor3f
   glGetFloatv
   glGenLists
+  glNormal3f

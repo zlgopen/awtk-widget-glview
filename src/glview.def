@@ -67,3 +67,4 @@ EXPORTS
     glColor3f
     glVertex3f
     glGenLists
+    glNormal3f
