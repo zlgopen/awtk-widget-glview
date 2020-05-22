@@ -1,18 +1,18 @@
 /*
  * Memory allocator for TinyGL
  */
-#include "zgl.h"
+#include "tkc/mem.h"
 
 /* modify these functions so that they suit your needs */
 
 void gl_free(void* p) {
-  free(p);
+  TKMEM_FREE(p);
 }
 
 void* gl_malloc(int size) {
-  return malloc(size);
+  return TKMEM_ALLOC(size);
 }
 
 void* gl_zalloc(int size) {
-  return calloc(1, size);
+  return TKMEM_CALLOC(1, size);
 }
