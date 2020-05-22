@@ -28,3 +28,4 @@ bin/image*
 bin/hello*
 .vscode
 .vs
+*.os
