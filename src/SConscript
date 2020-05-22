@@ -1,0 +1,49 @@
+import os
+import sys
+import platform
+
+OS_NAME = platform.system();
+LIB_DIR=os.environ['LIB_DIR'];
+BIN_DIR=os.environ['BIN_DIR'];
+
+env=DefaultEnvironment().Clone()
+TINYGL_SOURCES =[
+  "tinygl/api.c",
+  "tinygl/arrays.c",
+  "tinygl/clear.c",
+  "tinygl/clip.c",
+  "tinygl/error.c",
+  "tinygl/get.c",
+  "tinygl/image_util.c",
+  "tinygl/init.c",
+  "tinygl/light.c",
+  "tinygl/list.c",
+  "tinygl/matrix.c",
+  "tinygl/memory.c",
+  "tinygl/misc.c",
+  "tinygl/msghandling.c",
+  "tinygl/oscontext.c",
+  "tinygl/select.c",
+  "tinygl/specbuf.c",
+  "tinygl/texture.c",
+  "tinygl/vertex.c",
+  "tinygl/zbuffer.c",
+  "tinygl/zdither.c",
+  "tinygl/zline.c",
+  "tinygl/zmath.c",
+  "tinygl/ztriangle.c",
+]
+
+SOURCES=Glob("common/*.c") + Glob('glview/*.c') + TINYGL_SOURCES;
+
+EXPORT_DEF=''
+if OS_NAME == 'Windows':
+  EXPORT_DEF = ' /DEF:"src/glview.def" '
+
+if 'WITH_AWTK_SO' in os.environ:
+  LIBS=['awtk'];
+  LINKFLAGS=env['LINKFLAGS'] + EXPORT_DEF 
+  env.SharedLibrary(os.path.join(BIN_DIR, 'glview'), SOURCES, LIBS=LIBS, LINKFLAGS=LINKFLAGS);
+else:
+  env.Library(os.path.join(LIB_DIR, 'glview'), SOURCES);
+

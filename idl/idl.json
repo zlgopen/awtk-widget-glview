@@ -1,0 +1,90 @@
+[
+  {
+    "type": "class",
+    "methods": [
+      {
+        "params": [
+          {
+            "type": "widget_t*",
+            "name": "parent",
+            "desc": "父控件"
+          },
+          {
+            "type": "xy_t",
+            "name": "x",
+            "desc": "x坐标"
+          },
+          {
+            "type": "xy_t",
+            "name": "y",
+            "desc": "y坐标"
+          },
+          {
+            "type": "wh_t",
+            "name": "w",
+            "desc": "宽度"
+          },
+          {
+            "type": "wh_t",
+            "name": "h",
+            "desc": "高度"
+          }
+        ],
+        "annotation": {
+          "constructor": true,
+          "scriptable": true
+        },
+        "desc": "创建glview对象",
+        "name": "glview_create",
+        "return": {
+          "type": "widget_t*",
+          "desc": "对象。"
+        }
+      },
+      {
+        "params": [
+          {
+            "type": "widget_t*",
+            "name": "widget",
+            "desc": "glview对象。"
+          }
+        ],
+        "annotation": {
+          "cast": true,
+          "scriptable": true
+        },
+        "desc": "转换为glview对象(供脚本语言使用)。",
+        "name": "glview_cast",
+        "return": {
+          "type": "widget_t*",
+          "desc": "glview对象。"
+        }
+      },
+      {
+        "params": [],
+        "annotation": {
+          "scriptable": true,
+          "static": true
+        },
+        "desc": "注册GL View控件。",
+        "name": "glview_register",
+        "return": {
+          "type": "ret_t",
+          "desc": "返回RET_OK表示成功，否则表示失败。"
+        }
+      }
+    ],
+    "events": [],
+    "properties": [],
+    "header": "glview/glview.h",
+    "desc": "GL View控件。\n\n用TinyGL实现的软件OpenGL视图。\nglview_t是[widget\\_t](widget_t.md)的子类控件，widget\\_t的函数均适用于glview_t控件。\n\n在xml中使用\"glview\"标签创建GL View控件。如：\n\n```xml\n<glview x=\"c\" y=\"50\" w=\"24\" h=\"140\" value=\"-128\" format=\"%.4lf\" decimal_font_size_scale=\"0.5\"/>\n```\n在c代码中使用函数glview_create创建GL View控件。如：\n\n```c\nwidget_t* glview = glview_create(win, 10, 10, 128, 128);\n```",
+    "name": "glview_t",
+    "parent": "widget_t",
+    "annotation": {
+      "scriptable": true,
+      "design": true,
+      "widget": true
+    },
+    "level": 2
+  }
+]

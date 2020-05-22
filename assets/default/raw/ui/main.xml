@@ -1,0 +1,4 @@
+<window theme="main" >
+  <glview name="glview" x="c" y="m" w="280" h="280"/>
+  <button name="close" text="Close" x="c" y="bottom:10" w="128" h="30"/>
+</window>
