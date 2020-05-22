@@ -4,4 +4,6 @@ import sys
 env=DefaultEnvironment().Clone()
 BIN_DIR=os.environ['BIN_DIR'];
 
-env.Program(os.path.join(BIN_DIR, 'demo_glview'), Glob('*.c'))
+env.Program(os.path.join(BIN_DIR, 'demo_cube'), ['demo_cube.c', 'assets.c'])
+env.Program(os.path.join(BIN_DIR, 'demo_rect'), ['demo_rect.c', 'assets.c'])
+env.Program(os.path.join(BIN_DIR, 'demo_spin'), ['demo_spin.c', 'assets.c'])

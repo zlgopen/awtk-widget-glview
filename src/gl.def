@@ -60,4 +60,5 @@
   glInit
   glClose
   glColor3f
-  glVertex3f
+  glGetFloatv
+  glGenLists
