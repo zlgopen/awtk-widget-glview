@@ -140,7 +140,7 @@ static void reshape(int width, int height) {
   glViewport(0, 0, width, height);
 }
 
-static void graphci_draw(widget_t* widget, int width, int height) {
+void graphci_draw(widget_t* widget, int width, int height) {
   static bool_t s_inited = FALSE;
   if (!s_inited) {
     reshape(width, height);
@@ -151,5 +151,3 @@ static void graphci_draw(widget_t* widget, int width, int height) {
 
   draw_cube();
 }
-
-#include "main.inc"

@@ -134,7 +134,7 @@ void init(void) {
   Ystep = Zstep = 0.0;
 }
 
-static void graphci_draw(widget_t* widget, int width, int height) {
+void graphci_draw(widget_t* widget, int width, int height) {
   static bool_t s_inited = FALSE;
   if (!s_inited) {
     init();
@@ -145,5 +145,3 @@ static void graphci_draw(widget_t* widget, int width, int height) {
 
   draw();
 }
-
-#include "main.inc"

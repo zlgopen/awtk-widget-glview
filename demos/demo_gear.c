@@ -273,7 +273,7 @@ static ret_t on_idle(const idle_info_t* info) {
   return RET_REPEAT;
 }
 
-static void graphci_draw(widget_t* widget, int width, int height) {
+void graphci_draw(widget_t* widget, int width, int height) {
   static bool_t s_inited = FALSE;
   if (!s_inited) {
     init();
@@ -285,5 +285,3 @@ static void graphci_draw(widget_t* widget, int width, int height) {
 
   draw();
 }
-
-#include "main.inc"

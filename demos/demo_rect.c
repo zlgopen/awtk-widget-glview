@@ -34,7 +34,7 @@ static void reshape(int width, int height) {
   glLoadIdentity();
 }
 
-static void graphci_draw(widget_t* widget, int width, int height) {
+void graphci_draw(widget_t* widget, int width, int height) {
   reshape(width, height);
 
   glClearColor(0, 0.5, 0, 1);
@@ -55,5 +55,3 @@ static void graphci_draw(widget_t* widget, int width, int height) {
   glEnd();
 
 }
-
-#include "main.inc"
