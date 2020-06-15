@@ -20,6 +20,8 @@ Example:
 * style 仅生成有变化的主题资源。
 * string 仅生成有变化的字符串资源。
 
+### 1.1 设置
+
 如果需要修改资源生成工具的设置，修改 project.json 即可，设置参数的详细信息如下：
 
 ```json
@@ -59,3 +61,41 @@ Example:
 ```
 
 > 也可以通过打开 Designer，进入 “项目设置” 页面进行设置。
+
+### 1.2 注意事项
+
+##### 1.2.1 awtk 的路径
+
+如果使用 update_res.py 生成资源时出现如下错误：
+
+```
+ImportError: No module named update_res_common
+```
+
+只需修改 update_res.py 中的 AWTK_ROOT 为正确的 awtk 路径即可。
+
+##### 1.2.2 用于单色屏的位图字体生成工具 fontgen_ft
+
+默认情况下，awtk 编译后生成的 fontgen 工具只能生成用于非单色屏的位图字体。因此，如果需要生成用于单色屏的位图字体，重新生成一个专门的 fontgen。
+
+步骤如下：
+
+- 拷贝awtk 目录，并重命名为 awtk-mono。
+- 修改 awtk-mono/awtk_config.py 文件，将：
+
+```
+......
+#LCD='SDL_FB_MONO'
+......
+```
+
+​       改为
+
+```
+......
+LCD='SDL_FB_MONO'
+......
+```
+
+- 在 awtk-mono 目录下，执行 scons 命令，重新编译 awtk。
+- 将 awtk-mono/bin目录下fontgen工具重命名为 fontgen_ft，并拷贝到 awtk/bin目录下。

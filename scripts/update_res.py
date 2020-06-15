@@ -7,33 +7,16 @@ import collections
 
 # try add AWTK_ROOT/scripts to system environment
 AWTK_ROOT = '../awtk'
+if not os.path.exists(AWTK_ROOT) and not os.path.isabs(AWTK_ROOT):
+    AWTK_ROOT = '../' + AWTK_ROOT
 if os.path.exists(AWTK_ROOT):
     sys.path.append(AWTK_ROOT + '/scripts')
-elif not os.path.isabs(AWTK_ROOT):
-    AWTK_ROOT = '../' + AWTK_ROOT
-    if os.path.exists(AWTK_ROOT):
-        sys.path.append(AWTK_ROOT + '/scripts')
+else:
+    print('Can\'t find AWTK, please change AWTK_ROOT to the path of AWTK source code.')
 
 # AWTK_ROOT/scripts/update_res_common.py
 import update_res_common as common
 
-
-APP_ROOT = common.getcwd()
-if APP_ROOT.endswith('scripts'):
-    APP_ROOT = os.path.dirname(APP_ROOT)
-
-os.chdir(APP_ROOT)
-
-TOOLS_ROOT = None
-AWTK_ROOT = common.join_path(APP_ROOT, AWTK_ROOT)
-ASSETS_ROOT = common.join_path(APP_ROOT, 'design')
-ASSET_C = common.join_path(APP_ROOT, 'res/assets.inc')
-OUTPUT_ROOT = common.join_path(APP_ROOT, 'res/assets')
-DPI = 'x1'
-THEMES = []
-IS_GENERATE_INC_RES = True
-IS_GENERATE_INC_BITMAP = True
-APP_THEME = 'default'
 
 def use_theme_config_from_project_json():
     global DPI
@@ -132,14 +115,52 @@ def use_default_theme_config():
                         THEMES.append(file)
 
 
+def is_dependencies_ok():
+    dependencies = ['bsvggen', 'fontgen', 'imagegen', 'resgen', 'strgen', 'themegen', 'xml_to_ui']
+    for d in dependencies:
+      if not os.path.exists(common.join_path(TOOLS_ROOT, common.to_exe(d))):
+          print('Can\'t find ' + common.to_exe(d) + ', please build AWTK.')
+          return False
+
+    if IS_GENERATE_INC_BITMAP:
+        for t in THEMES:
+            if isinstance(t, dict):
+                print(t['imagegen_options'])
+                if 'imagegen_options' in t and t['imagegen_options'] == 'mono':
+                    if not os.path.exists(common.join_path(TOOLS_ROOT, common.to_exe('fontgen_ft'))):
+                        print('If you need to generate fonts those display on MONO LCD, please generate fontgen_ft.')
+                        return False
+
+    return True
+
+
+APP_ROOT = common.getcwd()
+if APP_ROOT.endswith('scripts'):
+    APP_ROOT = os.path.dirname(APP_ROOT)
+
+os.chdir(APP_ROOT)
+
+TOOLS_ROOT = common.join_path(AWTK_ROOT, 'bin')
+AWTK_ROOT = common.join_path(APP_ROOT, AWTK_ROOT)
+ASSETS_ROOT = common.join_path(APP_ROOT, 'design')
+ASSET_C = common.join_path(APP_ROOT, 'res/assets.inc')
+OUTPUT_ROOT = common.join_path(APP_ROOT, 'res/assets')
+DPI = 'x1'
+THEMES = []
+IS_GENERATE_INC_RES = True
+IS_GENERATE_INC_BITMAP = True
+APP_THEME = 'default'
+
 use_default_theme_config()
 
-if len(THEMES) == 0:
-    print('Not found theme')
+if not is_dependencies_ok():
+    print('For details, please read scripts/README.md.')
+elif len(THEMES) == 0:
+    print('Not found theme.')
+    print('For details, please read scripts/README.md.')
 else:
     common.init(AWTK_ROOT, ASSETS_ROOT, THEMES, ASSET_C, OUTPUT_ROOT)
-    if TOOLS_ROOT != None:
-        common.set_tools_dir(TOOLS_ROOT)
+    common.set_tools_dir(TOOLS_ROOT)
     common.set_dpi(DPI)
     common.set_app_theme(APP_THEME)
     common.set_enable_generate_inc_res(IS_GENERATE_INC_RES)
