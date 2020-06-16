@@ -134,6 +134,15 @@ def is_dependencies_ok():
     return True
 
 
+def on_generate_res_event():
+    if os.path.exists(common.join_path(APP_ROOT, 'scripts/update_res_generate_res_handler.py')):
+        import update_res_generate_res_handler as generate_res
+        if hasattr(generate_res, 'on_generate_res_before'):
+           common.on_generate_res_before(generate_res.on_generate_res_before)
+        if hasattr(generate_res, 'on_generate_res_after'):
+           common.on_generate_res_after(generate_res.on_generate_res_after)
+
+
 APP_ROOT = common.getcwd()
 if APP_ROOT.endswith('scripts'):
     APP_ROOT = os.path.dirname(APP_ROOT)
@@ -165,6 +174,7 @@ else:
     common.set_app_theme(APP_THEME)
     common.set_enable_generate_inc_res(IS_GENERATE_INC_RES)
     common.set_enable_generate_inc_bitmap(IS_GENERATE_INC_BITMAP)
+    on_generate_res_event()
     common.update_res()
 
     if isinstance(THEMES[0], dict):

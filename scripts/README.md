@@ -62,19 +62,70 @@ Example:
 
 > 也可以通过打开 Designer，进入 “项目设置” 页面进行设置。
 
-### 1.2 注意事项
+### 1.2 添加资源生成事件回调，实现额外处理逻辑
 
-##### 1.2.1 awtk 的路径
+update_res.py 在生成资源的前后会分别触发一个before事件和一个after事件。如果需要在资源生成前后做一些额外的处理，则在相应的事件回调中添加代码即可。
+
+具体步骤如下：
+
+- 在 update_res.py 所在目录新建一个Python文件，并命名为 update_res_generate_res_handler.py。默认文件内容如下：
+
+```python
+#!/usr/bin/python
+
+# ctx参数是一个dict类型，有如下属性：
+# ctx['type']: 当前正在生成的资源类型，有all、string、font、script、image、ui、style、data、xml
+# ctx['theme']: 当前正在生成的主题
+# ctx['imagegen_options']: 当前的图片生成选项，有mono、bgr565、bgra、rgb565、rgba
+# ctx['input']: 当前主题原始资源的存放路径，比如'e:/AWTK Application/design/default'
+# ctx['output']: 当前主题生成资源的存放路径，比如'e:/AWTK Application/res/assets/default'
+#
+# 资源生成事件的流程如下：
+# |----->-----  开始生成某个主题的资源
+# |                       |
+# |         on_generate_res_before('all')
+# |                       |
+# |         on_generate_res_before('string')
+# |                       |
+# |         on_generate_res_after('string')
+# |                       |
+# ^         on_generate_res_before('font')
+# |                       |
+# |         on_generate_res_after('font')
+# |                     ......
+# |         on_generate_res_before('xml')
+# |                       |
+# |         on_generate_res_after('xml')
+# |                       |
+# |         on_generate_res_after('all')
+# |                       |
+# |-----<-----    继续生成下一个主题
+#
+
+def on_generate_res_before(ctx):
+    print('======================= '+ ctx['type'] + ' =======================')
+
+
+def on_generate_res_after(ctx):
+    print('======================= '+ ctx['type'] + ' =======================')
+
+```
+
+- 在 on_generate_res_before 或 on_generate_res_after 添加处理逻辑。
+
+### 1.3 注意事项
+
+##### 1.3.1 awtk 的路径
 
 如果使用 update_res.py 生成资源时出现如下错误：
 
-```
+```cmd
 ImportError: No module named update_res_common
 ```
 
 只需修改 update_res.py 中的 AWTK_ROOT 为正确的 awtk 路径即可。
 
-##### 1.2.2 用于单色屏的位图字体生成工具 fontgen_ft
+##### 1.3.2 用于单色屏的位图字体生成工具 fontgen_ft
 
 默认情况下，awtk 编译后生成的 fontgen 工具只能生成用于非单色屏的位图字体。因此，如果需要生成用于单色屏的位图字体，重新生成一个专门的 fontgen。
 
@@ -83,7 +134,7 @@ ImportError: No module named update_res_common
 - 拷贝awtk 目录，并重命名为 awtk-mono。
 - 修改 awtk-mono/awtk_config.py 文件，将：
 
-```
+```python
 ......
 #LCD='SDL_FB_MONO'
 ......
@@ -91,7 +142,7 @@ ImportError: No module named update_res_common
 
 ​       改为
 
-```
+```python
 ......
 LCD='SDL_FB_MONO'
 ......
