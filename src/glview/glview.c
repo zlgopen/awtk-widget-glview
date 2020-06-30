@@ -116,13 +116,9 @@ widget_t* glview_create(widget_t* parent, xy_t x, xy_t y, wh_t w, wh_t h) {
 }
 
 widget_t* glview_cast(widget_t* widget) {
-  return_value_if_fail(widget != NULL && widget->vt != NULL, NULL);
+  return_value_if_fail(WIDGET_IS_INSTANCE_OF(widget, glview), NULL);
 
-  if (widget->vt == TK_REF_VTABLE(glview)) {
-    return widget;
-  }
-
-  return NULL;
+  return widget;
 }
 
 #include "base/widget_factory.h"
