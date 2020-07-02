@@ -66,6 +66,10 @@ if len(LANGUAGE) > 0:
   if len(lan) >= 2:
     APP_DEFAULT_COUNTRY = lan[1]
 
+SHARED = ARGUMENTS.get('SHARED', '')
+if len(SHARED) > 0 and SHARED.lower().startswith('f'):
+  BUILD_SHARED = 'false'
+
 APP_CPPPATH = []
 APP_CCFLAGS = ' -DLCD_WIDTH=' + LCD_WIDTH + ' -DLCD_HEIGHT=' + LCD_HEIGHT + ' ' 
 APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_DEFAULT_FONT=\\\"' + APP_DEFAULT_FONT + '\\\" '
