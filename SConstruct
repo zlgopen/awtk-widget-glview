@@ -13,7 +13,7 @@ def getAwtkRoot():
 
 
 def isBuildShared():
-  return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and BUILD_SHARED == 'true'
+  return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and BUILD_SHARED == 'true' and awtk.OS_NAME == 'Windows'
 
 
 def copyAwtkDLL():
