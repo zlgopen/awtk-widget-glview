@@ -31,17 +31,24 @@ python scripts/update_res.py all
 2. 编译
 
 ```
-scons
+Usage: scons SHARED[true|false] IDL_DEF[true|false] LCD[800_480|...]
+Example:
+scons SHARED=false
+scons IDL_DEF=false
+scons LCD=480_272
+scons SHARED=false IDL_DEF=false LCD=480_272
 ```
-> 注意：
-> 编译前先确认 SConstruct 文件中的 awtk_root 是否为 awtk 所在目录，不是则修改。
-> 默认使用动态库的形式，如果需要使用静态库，修改 SConstruct 文件中的 BUILD_SHARED = 'false' 即可。
+参数 SHARED 是可选的，用于指定是否编译生成动态库，缺省为true。
+参数 IDL_DEF 是可选的，用于指定编译前是否重新生成idl.json和def文件，缺省为true。
+参数 LCD 是可选的，用于指定示例程序运行时的LCD尺寸，格式为“height_width”。
+> 注意：编译前先确定SConstruct 文件中的 awtk_root 为 awtk 所在目录，否则会编译失败。
 
 3. 运行
+
 ```
 ./bin/demo
 ```
 
 ## 文档
 
-[AWTK 自定义控件规范](https://github.com/zlgopen/awtk/blob/master/docs/custom_widget_rules.md)
+[完善自定义控件](https://github.com/zlgopen/awtk-widget-generator/blob/master/docs/improve_generated_widget.md)

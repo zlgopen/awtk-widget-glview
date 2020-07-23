@@ -13,7 +13,7 @@ EXPORT_DEF=''
 if OS_NAME == 'Windows':
   EXPORT_DEF = ' /DEF:"src/glview.def" '
 
-if os.environ['BUILD_SHARED'] == 'True':
+if 'BUILD_SHARED' in os.environ and os.environ['BUILD_SHARED'] == 'True':
   LIBS=['awtk'];
   LINKFLAGS=env['LINKFLAGS'] + EXPORT_DEF 
   env.SharedLibrary(os.path.join(BIN_DIR, 'glview'), SOURCES, LIBS=LIBS, LINKFLAGS=LINKFLAGS);

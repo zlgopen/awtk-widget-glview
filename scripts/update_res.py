@@ -5,10 +5,18 @@ import sys
 import json
 import collections
 
+def getAwtkRoot():
+  awtk_root = '../awtk'
+  if not os.path.exists(awtk_root):
+    dirnames = ['../awtk', '../../awtk', '../../../awtk']
+    for dirname in dirnames:
+      if os.path.exists(dirname):
+        awtk_root = dirname
+        break
+  return awtk_root
+
 # try add AWTK_ROOT/scripts to system environment
-AWTK_ROOT = '../awtk'
-if not os.path.exists(AWTK_ROOT) and not os.path.isabs(AWTK_ROOT):
-    AWTK_ROOT = '../' + AWTK_ROOT
+AWTK_ROOT = os.path.abspath(getAwtkRoot())
 if os.path.exists(AWTK_ROOT):
     sys.path.append(AWTK_ROOT + '/scripts')
 else:
