@@ -1,7 +1,8 @@
-import os
+﻿import os
 import sys
 import platform
 import shutil
+import json
 
 
 def getAwtkRoot():
@@ -12,13 +13,14 @@ def getAwtkRoot():
       if os.path.exists(dirname):
         awtk_root = dirname
         break
-  return awtk_root
+  return os.path.abspath(awtk_root)
+
 
 def isBuildShared():
   return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and BUILD_SHARED == 'true'
 
 
-def copyAwtkDLL():
+def copyAwtkSharedLib():
   if awtk.OS_NAME == 'Darwin':
     src = os.path.join(AWTK_ROOT, 'bin/libawtk.dylib')
     dst = os.path.join(APP_BIN_DIR, 'libawtk.dylib')
@@ -40,15 +42,15 @@ def copyAwtkDLL():
     shutil.copy(src, dst)
 
 
-def genIdlAndDef(awtk_root):
-  idl_gen_tools = os.path.join(awtk_root, 'tools/idl_gen/index.js')
-  dll_def_gen_tools = os.path.join(awtk_root, 'tools/dll_def_gen/index.js')
+def genIdlAndDef():
+  idl_gen_tools = os.path.join(AWTK_ROOT, 'tools/idl_gen/index.js')
+  dll_def_gen_tools = os.path.join(AWTK_ROOT, 'tools/dll_def_gen/index.js')
 
-  cmd = 'node ' + idl_gen_tools + ' idl/idl.json ' + 'src'
+  cmd = 'node ' + '"' + idl_gen_tools + '"' + ' idl/idl.json ' + 'src'
   if os.system(cmd) != 0:
     print('exe cmd: ' + cmd + ' failed.')
 
-  cmd = 'node ' + dll_def_gen_tools + ' idl/idl.json ' + 'src/glview.def'
+  cmd = 'node ' + '"' + dll_def_gen_tools + '"'  + ' idl/idl.json ' + 'src/glview.def'
   if os.system(cmd) != 0 :
     print('exe cmd: ' + cmd + ' failed.')
   else:
@@ -56,6 +58,38 @@ def genIdlAndDef(awtk_root):
     with open('src/gl.def', 'r') as f:
       content = f.read()
     with open('src/glview.def', 'a') as f:
+      f.write(content)
+
+
+def saveUsesSdkInfo():
+  release_id = ''
+  filename = os.path.join(AWTK_ROOT, 'component.json')
+  if os.path.exists(filename):
+    with open(filename, 'r') as f:
+      component_content = f.read()
+      if len(component_content) > 0:
+        component_json = json.loads(component_content)
+        if 'release_id' in component_json:
+          release_id = component_json['release_id']
+          if sys.version_info < (3, 0):
+            release_id = release_id.encode('ascii')
+
+  content  = '{\n' 
+  content += '  "compileSDK": {\n'
+  content += '    "awtk": {\n'
+  content += '      "path": "' + AWTK_ROOT.replace('\\', '/') + '",\n'
+  content += '      "release_id": "' + release_id + '",\n'
+  content += '      "nanovg_backend": "' + awtk.NANOVG_BACKEND + '"\n'
+  content += '    }\n'
+  content += '  }\n'
+  content += '}'
+
+  filename = os.path.join(APP_BIN_DIR, 'uses_sdk.json')
+  if sys.version_info < (3, 0):
+    with open(filename, 'w') as f:
+      f.write(content)
+  else:
+    with open(filename, 'w', encoding='utf8') as f:
       f.write(content)
 
 
@@ -148,13 +182,15 @@ AWTK_LIBS = awtk.LIBS
 if isBuildShared():
   APP_LIBPATH = [APP_BIN_DIR, APP_LIB_DIR]
   AWTK_LIBS = awtk.SHARED_LIBS
-  copyAwtkDLL();
+  copyAwtkSharedLib()
 
   if awtk.OS_NAME == 'Linux':
     APP_LINKFLAGS += ' -Wl,-rpath=' + APP_BIN_DIR + ' '
 
 if GEN_IDL_DEF == 'true':
-  genIdlAndDef(AWTK_ROOT)
+  genIdlAndDef()
+
+saveUsesSdkInfo()
 
 if hasattr(awtk, 'CC'):
   DefaultEnvironment(

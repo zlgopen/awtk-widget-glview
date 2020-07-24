@@ -13,10 +13,10 @@ def getAwtkRoot():
       if os.path.exists(dirname):
         awtk_root = dirname
         break
-  return awtk_root
+  return os.path.abspath(awtk_root)
 
 # try add AWTK_ROOT/scripts to system environment
-AWTK_ROOT = os.path.abspath(getAwtkRoot())
+AWTK_ROOT = getAwtkRoot()
 if os.path.exists(AWTK_ROOT):
     sys.path.append(AWTK_ROOT + '/scripts')
 else:
