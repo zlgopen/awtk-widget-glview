@@ -84,6 +84,9 @@ def saveUsesSdkInfo():
   content += '  }\n'
   content += '}'
 
+  if not os.path.exists(APP_BIN_DIR):
+    os.makedirs(APP_BIN_DIR)
+
   filename = os.path.join(APP_BIN_DIR, 'uses_sdk.json')
   if sys.version_info < (3, 0):
     with open(filename, 'w') as f:
@@ -162,9 +165,12 @@ os.environ['BUILD_SHARED'] = str(isBuildShared())
 print('BUILD_SHARED: ' + str(isBuildShared()))
 
 APP_LINKFLAGS=''
+
 CUSTOM_WIDGET_LIBS = []
 APP_LIBS = CUSTOM_WIDGET_LIBS + ['glview']
-APP_CPPPATH=[
+
+CUSTOM_WIDGET_CPPPATH = []
+APP_CPPPATH = CUSTOM_WIDGET_CPPPATH + [
   os.path.join(APP_ROOT, 'src'),
   os.path.join(APP_ROOT, 'src/tinygl'),
 ]
