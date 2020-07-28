@@ -136,12 +136,18 @@ if len(LANGUAGE) > 0:
     APP_DEFAULT_COUNTRY = lan[1]
 
 SHARED = ARGUMENTS.get('SHARED', '')
-if len(SHARED) > 0 and SHARED.lower().startswith('f'):
-  BUILD_SHARED = 'false'
+if len(SHARED) > 0:
+  if SHARED.lower().startswith('t'):
+    BUILD_SHARED = 'true'
+  else:
+    BUILD_SHARED = 'false'
 
 IDL_DEF = ARGUMENTS.get('IDL_DEF', '')
-if len(IDL_DEF) > 0 and IDL_DEF.lower().startswith('f'):
-  GEN_IDL_DEF = 'false'
+if len(IDL_DEF) > 0:
+  if IDL_DEF.lower().startswith('t'):
+    GEN_IDL_DEF = 'true'
+  else:
+    GEN_IDL_DEF = 'false'
 
 APP_CPPPATH = []
 APP_CCFLAGS = ' -DLCD_WIDTH=' + LCD_WIDTH + ' -DLCD_HEIGHT=' + LCD_HEIGHT + ' ' 
