@@ -79,16 +79,6 @@ widget_t* glview_create(widget_t* parent, xy_t x, xy_t y, wh_t w, wh_t h);
  */
 widget_t* glview_cast(widget_t* widget);
 
-/**
- * @method glview_register
- * 注册GL View控件。
- *
- * @annotation ["scriptable", "static"]
- *
- * @return {ret_t} 返回RET_OK表示成功，否则表示失败。
- */
-ret_t glview_register(void);
-
 #define WIDGET_TYPE_GLVIEW "glview"
 #define GLVIEW(widget) ((glview_t*)(glview_cast(WIDGET(widget))))
 

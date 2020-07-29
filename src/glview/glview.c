@@ -120,12 +120,3 @@ widget_t* glview_cast(widget_t* widget) {
 
   return widget;
 }
-
-#include "base/widget_factory.h"
-
-ret_t glview_register(void) {
-  widget_factory_t* f = widget_factory();
-  widget_factory_register(f, WIDGET_TYPE_GLVIEW, glview_create);
-
-  return RET_OK;
-}

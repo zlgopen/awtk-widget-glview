@@ -1,8 +1,8 @@
 LIBRARY   glview
 EXPORTS
-    glview_create @1
-    glview_cast @2
-    glview_register @3
+    glview_register @1
+    glview_create @2
+    glview_cast @3
     glEnable
     glDisable
     glShadeModel

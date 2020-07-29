@@ -1,5 +1,20 @@
 [
   {
+    "params": [],
+    "annotation": {
+      "global": true
+    },
+    "desc": "注册GL View控件。",
+    "name": "glview_register",
+    "return": {
+      "type": "ret_t",
+      "desc": "返回RET_OK表示成功，否则表示失败。"
+    },
+    "type": "method",
+    "header": "src/glview_register.h",
+    "level": 1
+  },
+  {
     "type": "class",
     "methods": [
       {
@@ -58,19 +73,6 @@
         "return": {
           "type": "widget_t*",
           "desc": "glview对象。"
-        }
-      },
-      {
-        "params": [],
-        "annotation": {
-          "scriptable": true,
-          "static": true
-        },
-        "desc": "注册GL View控件。",
-        "name": "glview_register",
-        "return": {
-          "type": "ret_t",
-          "desc": "返回RET_OK表示成功，否则表示失败。"
         }
       }
     ],
