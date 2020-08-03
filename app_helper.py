@@ -18,6 +18,10 @@ class Helper:
         self.DEF_FILE = DEF_FILE
         return self
 
+    def set_dll_def_processor(self, processor):
+        self.DEF_FILE_PROCESSOR = processor
+        return self
+
     def set_ccflags(self, APP_CCFLAGS):
         self.APP_CCFLAGS = APP_CCFLAGS
         return self
@@ -55,9 +59,11 @@ class Helper:
 
         self.APP_LIBS = []
         self.DEF_FILE = None
+        self.DEF_FILE_PROCESSOR = None
         self.DEPENDS_LIBS = []
         self.APP_ROOT = APP_ROOT
         self.BUILD_SHARED = True
+        self.GEN_IDL_DEF = True
         self.ARGUMENTS = ARGUMENTS
         self.LINUX_FB = ARGUMENTS.get('LINUX_FB', '') != ''
         self.AWTK_ROOT = self.getAwtkRoot()
@@ -116,7 +122,7 @@ class Helper:
                 f.write(content)
 
     def isBuildShared(self):
-        return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and self.BUILD_SHARED 
+        return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and self.BUILD_SHARED == True
 
     def copyAwtkSharedLib(self):
         self.awtk.copySharedLib(self.AWTK_ROOT, self.APP_BIN_DIR, 'awtk')
@@ -142,6 +148,9 @@ class Helper:
             ' idl/idl.json ' + self.DEF_FILE
         if os.system(cmd) != 0:
             print('exe cmd: ' + cmd + ' failed.')
+        else:
+            if self.DEF_FILE_PROCESSOR != None:
+                self.DEF_FILE_PROCESSOR()
 
     def showHelp(self):
         print('Options default values:')
@@ -154,8 +163,6 @@ class Helper:
         sys.exit(0)
 
     def parseArgs(self, awtk, ARGUMENTS):
-        BUILD_SHARED = True
-        GEN_IDL_DEF = True
         LCD_WIDTH = '320'
         LCD_HEIGHT = '480'
         APP_DEFAULT_FONT = 'default'
@@ -192,12 +199,18 @@ class Helper:
                 APP_DEFAULT_COUNTRY = lan[1]
 
         SHARED = ARGUMENTS.get('SHARED', '')
-        if len(SHARED) > 0 and SHARED.lower().startswith('f'):
-            self.BUILD_SHARED = False
+        if len(SHARED) > 0:
+            if SHARED.lower().startswith('f'):
+                self.BUILD_SHARED = False
+            else:
+                self.BUILD_SHARED = True
 
         IDL_DEF = ARGUMENTS.get('IDL_DEF', '')
-        if len(IDL_DEF) > 0 and IDL_DEF.lower().startswith('f'):
-            GEN_IDL_DEF = False
+        if len(IDL_DEF) > 0:
+            if IDL_DEF.lower().startswith('f'):
+                self.GEN_IDL_DEF = False
+            else:
+                self.GEN_IDL_DEF = True
 
         APP_CCFLAGS = ' -DLCD_WIDTH=' + LCD_WIDTH + ' -DLCD_HEIGHT=' + LCD_HEIGHT + ' '
         APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_DEFAULT_FONT=\\\"' + APP_DEFAULT_FONT + '\\\" '
@@ -207,8 +220,7 @@ class Helper:
             APP_DEFAULT_LANGUAGE + '\\\" '
         APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_DEFAULT_COUNTRY=\\\"' + \
             APP_DEFAULT_COUNTRY + '\\\" '
-        APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_ROOT=\\\"' + \
-            self.APP_ROOT + '\\\" '
+
         os.environ['BUILD_SHARED'] = str(self.isBuildShared())
 
         APP_LINKFLAGS = ''
@@ -238,7 +250,6 @@ class Helper:
         self.APP_LIBPATH = APP_LIBPATH
         self.APP_CPPPATH = APP_CPPPATH
         self.APP_LINKFLAGS = APP_LINKFLAGS
-        self.GEN_IDL_DEF = GEN_IDL_DEF
         self.APP_CXXFLAGS = self.APP_CCFLAGS
 
     def prepare(self):
