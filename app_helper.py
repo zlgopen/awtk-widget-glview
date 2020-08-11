@@ -4,6 +4,11 @@ import json
 import shutil
 import platform
 
+def mkdir_if_not_exist(fullpath):
+    if os.path.exists(fullpath):
+        print(fullpath+' exist.')
+    else:
+        os.makedirs(fullpath)
 
 class Helper:
     def set_deps(self, DEPENDS_LIBS):
@@ -16,10 +21,6 @@ class Helper:
 
     def set_dll_def(self, DEF_FILE):
         self.DEF_FILE = DEF_FILE
-        return self
-
-    def set_dll_def_processor(self, processor):
-        self.DEF_FILE_PROCESSOR = processor
         return self
 
     def set_ccflags(self, APP_CCFLAGS):
@@ -59,17 +60,18 @@ class Helper:
 
         self.APP_LIBS = []
         self.DEF_FILE = None
-        self.DEF_FILE_PROCESSOR = None
         self.DEPENDS_LIBS = []
         self.APP_ROOT = APP_ROOT
         self.BUILD_SHARED = True
-        self.GEN_IDL_DEF = True
         self.ARGUMENTS = ARGUMENTS
         self.LINUX_FB = ARGUMENTS.get('LINUX_FB', '') != ''
         self.AWTK_ROOT = self.getAwtkRoot()
         self.APP_BIN_DIR = os.path.join(APP_ROOT, 'bin')
         self.APP_LIB_DIR = os.path.join(APP_ROOT, 'lib')
         self.APP_SRC = os.path.join(APP_ROOT, 'src')
+        
+        mkdir_if_not_exist(self.APP_BIN_DIR);
+        mkdir_if_not_exist(self.APP_LIB_DIR);
 
         sys.path.insert(0, self.AWTK_ROOT)
         import awtk_config as awtk
@@ -122,7 +124,7 @@ class Helper:
                 f.write(content)
 
     def isBuildShared(self):
-        return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and self.BUILD_SHARED == True
+        return 'WITH_AWTK_SO' in os.environ and os.environ['WITH_AWTK_SO'] == 'true' and self.BUILD_SHARED 
 
     def copyAwtkSharedLib(self):
         self.awtk.copySharedLib(self.AWTK_ROOT, self.APP_BIN_DIR, 'awtk')
@@ -148,9 +150,6 @@ class Helper:
             ' idl/idl.json ' + self.DEF_FILE
         if os.system(cmd) != 0:
             print('exe cmd: ' + cmd + ' failed.')
-        else:
-            if self.DEF_FILE_PROCESSOR != None:
-                self.DEF_FILE_PROCESSOR()
 
     def showHelp(self):
         print('Options default values:')
@@ -163,6 +162,8 @@ class Helper:
         sys.exit(0)
 
     def parseArgs(self, awtk, ARGUMENTS):
+        BUILD_SHARED = True
+        GEN_IDL_DEF = True
         LCD_WIDTH = '320'
         LCD_HEIGHT = '480'
         APP_DEFAULT_FONT = 'default'
@@ -199,18 +200,12 @@ class Helper:
                 APP_DEFAULT_COUNTRY = lan[1]
 
         SHARED = ARGUMENTS.get('SHARED', '')
-        if len(SHARED) > 0:
-            if SHARED.lower().startswith('f'):
-                self.BUILD_SHARED = False
-            else:
-                self.BUILD_SHARED = True
+        if len(SHARED) > 0 and SHARED.lower().startswith('f'):
+            self.BUILD_SHARED = False
 
         IDL_DEF = ARGUMENTS.get('IDL_DEF', '')
-        if len(IDL_DEF) > 0:
-            if IDL_DEF.lower().startswith('f'):
-                self.GEN_IDL_DEF = False
-            else:
-                self.GEN_IDL_DEF = True
+        if len(IDL_DEF) > 0 and IDL_DEF.lower().startswith('f'):
+            GEN_IDL_DEF = False
 
         APP_CCFLAGS = ' -DLCD_WIDTH=' + LCD_WIDTH + ' -DLCD_HEIGHT=' + LCD_HEIGHT + ' '
         APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_DEFAULT_FONT=\\\"' + APP_DEFAULT_FONT + '\\\" '
@@ -220,7 +215,8 @@ class Helper:
             APP_DEFAULT_LANGUAGE + '\\\" '
         APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_DEFAULT_COUNTRY=\\\"' + \
             APP_DEFAULT_COUNTRY + '\\\" '
-
+        APP_CCFLAGS = APP_CCFLAGS + ' -DAPP_ROOT=\\\"' + \
+            self.APP_ROOT + '\\\" '
         os.environ['BUILD_SHARED'] = str(self.isBuildShared())
 
         APP_LINKFLAGS = ''
@@ -250,6 +246,7 @@ class Helper:
         self.APP_LIBPATH = APP_LIBPATH
         self.APP_CPPPATH = APP_CPPPATH
         self.APP_LINKFLAGS = APP_LINKFLAGS
+        self.GEN_IDL_DEF = GEN_IDL_DEF
         self.APP_CXXFLAGS = self.APP_CCFLAGS
 
     def prepare(self):
