@@ -1,5 +1,5 @@
 ﻿import os
-import app_helper as app
+import scripts.app_helper as app
 
 def dll_def_processor():
     content = ''
