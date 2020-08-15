@@ -28,3 +28,7 @@
 ret_t glview_register(void) {
   return widget_factory_register(widget_factory(), WIDGET_TYPE_GLVIEW, glview_create);
 }
+
+const char* glview_supported_render_mode(void) {
+  return "OpenGL";
+}

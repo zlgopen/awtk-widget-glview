@@ -15,6 +15,21 @@
     "level": 1
   },
   {
+    "params": [],
+    "annotation": {
+      "global": true
+    },
+    "desc": "获取支持的渲染模式。",
+    "name": "glview_supported_render_mode",
+    "return": {
+      "type": "const char*",
+      "desc": "返回渲染模式。"
+    },
+    "type": "method",
+    "header": "src/glview_register.h",
+    "level": 1
+  },
+  {
     "type": "class",
     "methods": [
       {
@@ -79,7 +94,7 @@
     "events": [],
     "properties": [],
     "header": "glview/glview.h",
-    "desc": "GL View控件。\n\n用TinyGL实现的软件OpenGL视图。\nglview_t是[widget\\_t](widget_t.md)的子类控件，widget\\_t的函数均适用于glview_t控件。\n\n在xml中使用\"glview\"标签创建GL View控件。如：\n\n```xml\n<glview x=\"c\" y=\"50\" w=\"24\" h=\"140\" value=\"-128\" format=\"%.4lf\" decimal_font_size_scale=\"0.5\"/>\n```\n在c代码中使用函数glview_create创建GL View控件。如：\n\n```c\nwidget_t* glview = glview_create(win, 10, 10, 128, 128);\n```",
+    "desc": "GL View控件。\n\n用TinyGL实现的软件OpenGL视图。\nglview_t是[widget\\_t](widget_t.md)的子类控件，widget\\_t的函数均适用于glview_t控件。\n\n在xml中使用\"glview\"标签创建GL View控件。如：\n\n```xml\n<!-- ui -->\n<glview x=\"c\" y=\"50\" w=\"100\" h=\"100\"/>\n```\n\n在c代码中使用函数glview_create创建GL View控件。如：\n\n```c\nwidget_t* glview = glview_create(win, 10, 10, 128, 128);\n```",
     "name": "glview_t",
     "parent": "widget_t",
     "annotation": {

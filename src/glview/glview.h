@@ -39,8 +39,10 @@ BEGIN_C_DECLS
  * 在xml中使用"glview"标签创建GL View控件。如：
  *
  * ```xml
- * <glview x="c" y="50" w="24" h="140" value="-128" format="%.4lf" decimal_font_size_scale="0.5"/>
+ * <!-- ui -->
+ * <glview x="c" y="50" w="100" h="100"/>
  * ```
+ *
  * 在c代码中使用函数glview_create创建GL View控件。如：
  *
  * ```c
