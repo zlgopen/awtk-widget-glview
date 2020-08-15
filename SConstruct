@@ -8,7 +8,12 @@ def dll_def_processor():
     with open('src/glview.def', 'a') as f:
         f.write(content)
 
-ARGUMENTS['LCD'] = '800_480'
+def initArgument(name, defVal):
+    val = ARGUMENTS.get(name, '')
+    if len(val) == 0:
+        ARGUMENTS[name] = defVal
+
+initArgument('LCD', '800_480')
 helper = app.Helper(ARGUMENTS);
 
 APP_CPPPATH=[os.path.abspath('./src/tinygl')]
