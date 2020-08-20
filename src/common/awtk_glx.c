@@ -29,6 +29,7 @@ void tkglDestroyContext(AWTK_GLXContext ctx1) {
   TinyAWTK_GLXContext* ctx = (TinyAWTK_GLXContext*)ctx1;
   if (ctx->gl_context != NULL) {
     glClose();
+    gl_set_context(NULL);
   }
   gl_free(ctx);
 }
@@ -71,7 +72,7 @@ int tkglMakeCurrent(AWTK_GLXDrawable drawable, AWTK_GLXContext ctx1) {
   int ysize = 0;
   ZBuffer* zb = NULL;
 
-  if (ctx->gl_context == NULL) {
+  if (gl_get_context() == NULL) {
     /* create the TinyGL context */
 
     xsize = drawable->w;
@@ -96,11 +97,15 @@ int tkglMakeCurrent(AWTK_GLXDrawable drawable, AWTK_GLXContext ctx1) {
     glViewport(0, 0, xsize, ysize);
   }
 
+  if (ctx->gl_context != gl_get_context()) {
+    ctx->gl_context = gl_get_context();
+  }
+
   return 1;
 }
 
 static ret_t zbuffer_to_bitmap_rgb565(bitmap_t* drawable, TinyAWTK_GLXContext* ctx) {
-  uint32_t size = ctx->xsize * ctx->ysize * 2;
+  uint32_t size = tk_min(ctx->xsize * ctx->ysize * 2, drawable->w * drawable->h * 2);
   void* src = (void*)(ctx->gl_context->zb->pbuf);
   void* dst = (void*)bitmap_lock_buffer_for_write(drawable);
   memcpy(dst, src, size);
@@ -112,11 +117,15 @@ static ret_t zbuffer_to_bitmap_rgb565(bitmap_t* drawable, TinyAWTK_GLXContext* c
 static ret_t zbuffer_to_bitmap_rgba8888(bitmap_t* drawable, TinyAWTK_GLXContext* ctx) {
   int i = 0;
   int j = 0;
+  int w = 0;
+  int h = 0;
   rgba_t* dst = (rgba_t*)bitmap_lock_buffer_for_write(drawable);
   pixel_rgb565_t* src = (pixel_rgb565_t*)(ctx->gl_context->zb->pbuf);
+  h = tk_min(drawable->h, ctx->ysize);
+  w = tk_min(drawable->w, ctx->xsize);
 
-  for (j = 0; j < ctx->ysize; j++) {
-    for (i = 0; i < ctx->xsize; i++) {
+  for (j = 0; j < h; j++) {
+    for (i = 0; i < w; i++) {
       uint16_t v = *(uint16_t*)src;
 
       dst->r = src->r << 3;

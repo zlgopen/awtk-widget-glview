@@ -6,7 +6,10 @@
 /* modify these functions so that they suit your needs */
 
 void gl_free(void* p) {
-  TKMEM_FREE(p);
+  if (p) {
+    TKMEM_FREE(p);
+    p = NULL;
+  }
 }
 
 void* gl_malloc(int size) {
