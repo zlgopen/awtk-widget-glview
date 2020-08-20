@@ -30,18 +30,20 @@ python scripts/update_res.py all
 
 2. 编译
 
+* 编译PC版本
+
 ```
-Usage: scons SHARED[true|false] IDL_DEF[true|false] LCD[800_480|...]
-Example:
-scons SHARED=false
-scons IDL_DEF=false
-scons LCD=480_272
-scons SHARED=false IDL_DEF=false LCD=480_272
+scons
 ```
-参数 SHARED 是可选的，用于指定是否编译生成动态库，缺省为true。
-参数 IDL_DEF 是可选的，用于指定编译前是否重新生成idl.json和def文件，缺省为true。
-参数 LCD 是可选的，用于指定示例程序运行时的LCD尺寸，格式为“height_width”。
-> 注意：编译前先确定SConstruct 文件中的 awtk_root 为 awtk 所在目录，否则会编译失败。
+
+* 编译LINUX FB版本
+
+```
+scons LINUX_FB=true
+```
+
+> 完整编译选项请参考[编译选项](https://github.com/zlgopen/awtk-widget-generator/blob/master/docs/build_options.md)
+
 
 3. 运行
 
