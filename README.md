@@ -24,9 +24,19 @@ cd awtk-widget-glview; scons
 ```
 python scripts/update_res.py all
 ```
-> 也可以使用 Designer 打开项目，之后点击 “打包” 按钮进行生成
+> 也可以使用 Designer 打开项目，之后点击 “打包” 按钮进行生成；
 > 如果资源发生修改，则需要重新生成资源。
 
+如果 PIL 没有安装，执行上述脚本可能会出现如下错误：
+```cmd
+Traceback (most recent call last):
+...
+ModuleNotFoundError: No module named 'PIL'
+```
+请用 pip 安装：
+```cmd
+pip install Pillow
+```
 
 2. 编译
 
