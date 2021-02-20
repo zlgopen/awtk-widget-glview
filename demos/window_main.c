@@ -1,4 +1,5 @@
 ﻿#include "awtk.h"
+#include "glview_register.h"
 
 extern void graphci_draw(widget_t* widget, int width, int height);
 

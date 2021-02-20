@@ -6,6 +6,8 @@
 #include "awtk_glx.h"
 #include "tinygl/zgl.h"
 
+void gl_set_context(GLContext* ctx);
+
 typedef struct {
   int xsize;
   int ysize;
