@@ -10,7 +10,7 @@ env=DefaultEnvironment().Clone()
 SOURCES=Glob("common/*.c") + Glob('glview/*.c') + Glob('tinygl/*.c') + Glob('*.c')
 
 EXPORT_DEF=''
-if OS_NAME == 'Windows':
+if OS_NAME == 'Windows' and os.environ['TOOLS_NAME'] == '':
   EXPORT_DEF = ' /DEF:"src/glview.def" '
 
 if 'BUILD_SHARED' in os.environ and os.environ['BUILD_SHARED'] == 'True':
