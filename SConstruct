@@ -13,4 +13,4 @@ APP_CPPPATH=[os.path.abspath('./src/tinygl')]
 helper.set_dll_def('src/glview.def').set_dll_def_processor(dll_def_processor).set_libs(['glview']).add_cpppath(APP_CPPPATH).call(DefaultEnvironment)
 
 SConscriptFiles = ['src/SConscript', 'demos/SConscript', 'tests/SConscript']
-SConscript(SConscriptFiles)
+helper.SConscript(SConscriptFiles)
